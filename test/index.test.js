@@ -4,9 +4,9 @@ import os from "node:os";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import { $ } from "execa";
-import applyResolvePolyfill from "./index.js";
+import polyfill from "../src/index.js";
 
-const importMeta = applyResolvePolyfill({ url: import.meta.url });
+polyfill(import.meta);
 
 async function tmpjs(js) {
   const f = os.tmpdir() + "/" + Math.random().toString(36) + ".mjs";
@@ -16,34 +16,36 @@ async function tmpjs(js) {
 }
 
 test("resolve works with relative paths", () => {
-  console.log(importMeta.resolve("./index.js"));
+  console.log(import.meta.resolve("../src/index.js"));
 });
 
 test("resolve works with absolute paths", () => {
-  const absolute = new URL("./index.js", import.meta.url).pathname;
-  console.log(importMeta.resolve(absolute));
+  const absolute = new URL("../src/index.js", import.meta.url).pathname;
+  console.log(import.meta.resolve(absolute));
 });
 
 test("resolve works with complete URLs", () => {
-  const complete = new URL("./index.js", import.meta.url).href;
-  console.log(importMeta.resolve(complete));
+  const complete = new URL("../src/index.js", import.meta.url).href;
+  console.log(import.meta.resolve(complete));
 });
 
 test("resolve throws on non-existent paths", () => {
-  assert.throws(() => importMeta.resolve("./non-existent.js"));
+  assert.throws(() => import.meta.resolve("./non-existent.js"));
 });
 
 test("resolve works with npm packages", () => {
-  console.log(importMeta.resolve("is-odd"));
+  console.log(import.meta.resolve("is-odd"));
 });
 
 test("resolve works with node: specifiers", () => {
-  console.log(importMeta.resolve("node:fs"));
+  console.log(import.meta.resolve("node:fs"));
 });
 
-test("works with no URL", () => {
-  const importMeta = applyResolvePolyfill();
-  console.log(importMeta.resolve("./index.js"));
+test("works with no parentURL", () => {
+  const importMeta = { __proto__: null };
+  importMeta.url = import.meta.url;
+  polyfill(importMeta);
+  console.log(importMeta.resolve("../src/index.js"));
 });
 
 test("works with loaders", async () => {
@@ -55,7 +57,7 @@ test("works with loaders", async () => {
       return next(specifier, ctx);
     }
   `);
-  const u = importMeta.resolve("./index.js");
+  const u = new URL("../src/index.js", import.meta.url).href;
   const f2 = await tmpjs(`
     import applyResolvePolyfill from ${JSON.stringify(u)};
     applyResolvePolyfill(import.meta);

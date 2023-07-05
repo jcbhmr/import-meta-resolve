@@ -1,7 +1,5 @@
 import { Bench } from "tinybench";
-import applyResolvePolyfill from "./index.js";
-
-const importMeta = applyResolvePolyfill({ url: import.meta.url });
+import resolve from "../src/resolve.js";
 
 const bench = new Bench({ time: 1000 });
 
@@ -12,13 +10,13 @@ if (import.meta.resolve && !import.meta.resolve("data:,").then) {
   });
 } else {
   console.log(
-    "Run this on Node.js v20 with --experimental-import-meta-resolve to get " +
-      "another row!"
+    "Run this on Node.js v20 with --experimental-import-meta-resolve to " +
+      "compare against the native import.meta.resolve() sync API."
   );
 }
 
-bench.add("resolve() import.meta.url", () => {
-  importMeta.resolve(import.meta.url);
+bench.add("worker resolve() import.meta.url", () => {
+  resolve(import.meta.url);
 });
 
 bench.add("new URL() import.meta.url", () => {
