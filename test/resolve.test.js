@@ -4,7 +4,7 @@ import os from "node:os";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import { $ } from "execa";
-import resolve from "../src/resolve";
+import resolve from "../src/resolve.js";
 
 async function tmpjs(js) {
   const f = os.tmpdir() + "/" + Math.random().toString(36) + ".mjs";

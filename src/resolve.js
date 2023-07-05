@@ -1,7 +1,7 @@
 import callsites from "callsites";
 import url from "node:url";
-import getWorker from "./lib/getWorker.js";
-import receiveMessageOnWorker from "./lib/recieveMessageOnWorker.js";
+import getPort from "./lib/getPort.js";
+import worker_threads from "node:worker_threads";
 
 /**
  * @param {string} specifier
@@ -12,9 +12,18 @@ import receiveMessageOnWorker from "./lib/recieveMessageOnWorker.js";
 export default function resolve(specifier, parentURL = undefined) {
   specifier = `${specifier}`;
   if (parentURL === undefined) {
-    parentURL =
+    // @ts-ignore
+    if (this?.url != null) {
       // @ts-ignore
-      this?.url ?? url.pathToFileURL(callsites()[1].getFileName()).href;
+      parentURL = this.url;
+    } else {
+      const fileName = callsites()[1].getFileName();
+      if (fileName.startsWith("file:")) {
+        parentURL = fileName;
+      } else {
+        parentURL = url.pathToFileURL(fileName).href;
+      }
+    }
   } else {
     parentURL = `${parentURL}`;
   }
@@ -25,13 +34,14 @@ export default function resolve(specifier, parentURL = undefined) {
     return import.meta.resolve(specifier, parentURL);
   }
 
-  const worker = getWorker();
+  const port = getPort();
 
   const lockBuffer = new SharedArrayBuffer(4);
   const lock = new Int32Array(lockBuffer);
-  worker.postMessage([lockBuffer, specifier, parentURL]);
-  Atomics.wait(lock, 0, 1);
-  const r = receiveMessageOnWorker(worker).message;
+  port.postMessage([lockBuffer, specifier, parentURL]);
+  Atomics.wait(lock, 0, 0);
+  // @ts-ignore
+  const r = worker_threads.receiveMessageOnPort(port).message;
 
   if (r.length == 1) {
     return r[0];
