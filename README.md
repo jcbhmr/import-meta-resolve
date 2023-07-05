@@ -1,3 +1,5 @@
+![🚧 Under construction 👷‍♂️](https://i.imgur.com/LEP2R3N.png)
+
 # Node.js v20 `import.meta.resolve()` polyfill
 
 🎯 import.meta.resolve() backport for Node.js
@@ -16,7 +18,7 @@
 ## Installation
 
 ```sh
-npm install @jcbhmr/import-meta-resolve
+npm install @jcbhmr/node-import-meta-resolve
 ```
 
 🛑 This package is designed to work **only** with Node.js. Other platforms are
@@ -26,7 +28,7 @@ a native `import.meta.resolve()`** function! 😊
 ## Usage
 
 ```js
-import applyResolvePolyfill from "@jcbhmr/import-meta-resolve";
+import applyResolvePolyfill from "@jcbhmr/node-import-meta-resolve";
 applyResolvePolyfill(import.meta);
 
 console.log(import.meta.resolve("is-odd"))
