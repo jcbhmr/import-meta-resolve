@@ -20,6 +20,8 @@
   ],
   "type": "module",
   "exports": {
+    "deno": null,
+    "bun": null,
     "node": "./index.js"
   },
   "files": [
