@@ -1,16 +1,12 @@
 {
-  "include": ["**/*.js"],
-  "exclude": ["coverage/", "node_modules/"],
   "compilerOptions": {
+    "noEmit": true,
+    "allowJs": true,
     "checkJs": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["es2020"],
-    "module": "node16",
-    "newLine": "lf",
-    "strict": true,
-    "target": "es2020"
+    "lib": ["ESNext", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "strict": false
   }
 }
