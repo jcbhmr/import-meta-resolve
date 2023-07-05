@@ -1,10 +1,10 @@
 {
-  "name": "@jcbhmr/import-meta-resolve",
+  "name": "@jcbhmr/node-import-meta-resolve",
   "version": "4.0.0",
   "description": "🎯 import.meta.resolve() backport for Node.js",
   "keywords": [
     "import",
-    "meta",
+    "import-meta",
     "import-meta-resolve",
     "esmodules",
     "nodejs",
