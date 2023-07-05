@@ -13,20 +13,13 @@ function getPort() {
         const { default: importMeta } = await import("data:text/javascript,export default import.meta");
         const lock = new Int32Array(worker_threads.workerData.lockBuffer);
         worker_threads.workerData.port.on("message", ([specifier, parentURL]) => {
-          let returnValue;
-          let error;
-          let threw = false;
+          let r;
           try {
-            returnValue = importMeta.resolve(specifier, parentURL);
+            r = [importMeta.resolve(specifier, parentURL)];
           } catch (e) {
-            threw = true;
-            error = e;
+            r = [, e];
           }
-          if (threw) {
-            worker_threads.workerData.port.postMessage([, error]);
-          } else {
-            worker_threads.workerData.port.postMessage([returnValue]);
-          }
+          worker_threads.workerData.port.postMessage(r);
           Atomics.store(lock, 0, 1);
           Atomics.notify(lock, 0);
         });
