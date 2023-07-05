@@ -19,6 +19,9 @@
     "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
   ],
   "type": "module",
+  "exports": {
+    "node": "./index.js"
+  },
   "files": [
     "index.js"
   ],
