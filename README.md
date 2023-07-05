@@ -12,7 +12,7 @@ TODO: Add header image here
 </div>
 
 ⏱ Completely synchronous, just like in the browser \
-🧙‍♂️ Automagically deduces the `import.meta.url` \
+🧙 Automagically deduces the `import.meta.url` \
 🔃 Works with `--loader` stuff too! \
 🌳 Don't need to `--experimental-import-meta-resolve`
 
