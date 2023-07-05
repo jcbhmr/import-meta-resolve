@@ -29,3 +29,8 @@ test("resolve works with npm packages", () => {
 test("resolve works with node: specifiers", () => {
   console.log(importMeta.resolve("node:fs"));
 });
+
+test("works with no URL", () => {
+  const importMeta = applyResolvePolyfill();
+  console.log(importMeta.resolve("./index.js"));
+});
