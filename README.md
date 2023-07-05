@@ -1,8 +1,8 @@
 ![🚧 Under construction 👷‍♂️](https://i.imgur.com/LEP2R3N.png)
 
-# Node.js v20 `import.meta.resolve()` polyfill
+# Node.js `import.meta.resolve()` polyfill
 
-🎯 import.meta.resolve() backport for Node.js \
+🎯 Synchronous `import.meta.resolve()` polyfill for Node.js \
 💡 Inspired by [wooorm/import-meta-resolve]
 
 <div align="center">
