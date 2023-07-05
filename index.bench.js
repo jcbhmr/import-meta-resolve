@@ -10,6 +10,11 @@ if (import.meta.resolve && !import.meta.resolve("data:,").then) {
   bench.add("native resolve() import.meta.url", () => {
     import.meta.resolve(import.meta.url);
   });
+} else {
+  console.log(
+    "Run this on Node.js v20 with --experimental-import-meta-resolve to get " +
+      "another row!"
+  );
 }
 
 bench.add("resolve() import.meta.url", () => {
