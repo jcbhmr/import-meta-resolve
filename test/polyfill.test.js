@@ -4,7 +4,7 @@ import os from "node:os";
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import { $ } from "execa";
-import polyfill from "../src/index.js";
+import polyfill from "../src/polyfill.js";
 
 polyfill(import.meta);
 

@@ -1,9 +1,9 @@
-import worker_threads from "node:worker_threads";
+import { Worker as NodeWorker } from "node:worker_threads";
 
 const workerCode = `
-import worker_threads from "node:worker_threads";
+import { workerData } from "node:worker_threads";
 
-const { port } = worker_threads.workerData;
+const { port } = workerData;
 port.onmessage = async (e) => {
   /** @type {[Int32Array, string, string | undefined]} */
   const [lockBuffer, specifier, parentURL] = e.data;
@@ -22,12 +22,10 @@ port.onmessage = async (e) => {
 };
 `;
 
-/**
- * @type {| { worker: import("node:worker_threads").Worker; port: MessagePort }
- *   | null
- *   | undefined}
- */
+/** @type {{ worker: NodeWorker; port: MessagePort } | null | undefined} */
 let cache;
+
+/** @returns {MessagePort} */
 function getPort() {
   if (!cache) {
     const { port1, port2 } = new MessageChannel();
@@ -38,7 +36,7 @@ function getPort() {
     const u =
       "data:text/javascript;base64," +
       Buffer.from(workerCode).toString("base64");
-    const worker = new worker_threads.Worker(`import(${JSON.stringify(u)})`, {
+    const worker = new NodeWorker(`import(${JSON.stringify(u)})`, {
       eval: true,
       execArgv: process.execArgv.includes("--experimental-import-meta-resolve")
         ? process.execArgv

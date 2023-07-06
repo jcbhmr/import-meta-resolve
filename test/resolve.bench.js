@@ -1,5 +1,5 @@
 import { Bench } from "tinybench";
-import resolve from "../src/resolve.js";
+import resolve from "../src/lib/resolve.js";
 
 const bench = new Bench({ time: 1000 });
 

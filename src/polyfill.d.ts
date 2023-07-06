@@ -4,5 +4,5 @@ declare global {
   }
 }
 
-declare function d(i: ImportMeta): ImportMeta;
-export default d;
+declare function polyfill(importMeta: ImportMeta): void;
+export default polyfill;
