@@ -17,16 +17,16 @@ async function tmpjs(js) {
 }
 
 test("resolve works with relative paths", () => {
-  console.log(import.meta.resolve("../src/index.js"));
+  console.log(import.meta.resolve("../src/resolve-node.js"));
 });
 
 test("resolve works with absolute paths", () => {
-  const absolute = new URL("../src/index.js", import.meta.url).pathname;
+  const absolute = new URL("../src/resolve-node.js", import.meta.url).pathname;
   console.log(import.meta.resolve(absolute));
 });
 
 test("resolve works with complete URLs", () => {
-  const complete = new URL("../src/index.js", import.meta.url).href;
+  const complete = new URL("../src/resolve-node.js", import.meta.url).href;
   console.log(import.meta.resolve(complete));
 });
 
@@ -46,7 +46,7 @@ test("works with no parentURL", () => {
   const importMeta = { __proto__: null };
   importMeta.url = import.meta.url;
   polyfill(importMeta);
-  console.log(importMeta.resolve("../src/index.js"));
+  console.log(importMeta.resolve("../src/resolve-node.js"));
 });
 
 test("works with loaders", async () => {
@@ -58,10 +58,10 @@ test("works with loaders", async () => {
       return next(specifier, ctx);
     }
   `);
-  const u = new URL("../src/index.js", import.meta.url).href;
+  const u = new URL("../src/polyfill-node.js", import.meta.url).href;
   const f2 = await tmpjs(`
-    import applyResolvePolyfill from ${JSON.stringify(u)};
-    applyResolvePolyfill(import.meta);
+    import polyfill from ${JSON.stringify(u)};
+    polyfill(import.meta);
     console.log(import.meta.resolve("custom:foo"));
   `);
   console.log((await $`node --loader=${f1} ${f2}`).stdout);

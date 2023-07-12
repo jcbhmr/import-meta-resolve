@@ -29,7 +29,7 @@ test("resolve works with complete URLs", () => {
 
 test("resolve throws on non-existent paths", () => {
   assert.throws(() =>
-    resolve(import.meta, "./non-existent.js", import.meta.url)
+    resolve(import.meta, "./non-existent.js", import.meta.url),
   );
 });
 
