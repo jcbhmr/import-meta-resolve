@@ -1,7 +1,7 @@
 {
   "name": "@webfill/import-meta-resolve",
-  "version": "5.0.0",
-  "description": "🎯 Standard synchronous `import.meta.resolve()` for anywhere",
+  "version": "0.1.0",
+  "description": "🎯 Standard synchronous import.meta.resolve() for anywhere",
   "keywords": [
     "import",
     "import-meta",
@@ -10,13 +10,12 @@
     "nodejs",
     "module"
   ],
-  "homepage": "https://github.com/jcbhmr/import-meta-resolve#readme",
-  "bugs": "https://github.com/jcbhmr/import-meta-resolve/issues",
-  "repository": "jcbhmr/import-meta-resolve",
+  "homepage": "https://github.com/webfill/import-meta-resolve#readme",
+  "bugs": "https://github.com/webfill/import-meta-resolve/issues",
+  "repository": "github:webfill/import-meta-resolve",
   "license": "MIT",
   "contributors": [
-    "Jacob Hummer <jcbhmr@outlook.com> (https://jcbhmr.me/)",
-    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
+    "Jacob Hummer <jcbhmr@outlook.com> (https://jcbhmr.me/)"
   ],
   "type": "module",
   "exports": {
@@ -32,6 +31,12 @@
       "node": "./src/resolve-node.js",
       "default": "./src/resolve-deno+default.js"
     },
+    "./polyfill.js": {
+      "deno": "./src/polyfill-deno.js",
+      "bun": "./src/polyfill-bun.js",
+      "node": "./src/polyfill-node.js",
+      "default": "./src/polyfill-deno.js"
+    },
     "./lib/*": null,
     "./*.js": "./src/*.js"
   },
@@ -42,9 +47,6 @@
     "bench": "node --experimental-import-meta-resolve benchmark/native-vs-polyfill.bench.js",
     "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
     "test": "node --test"
-  },
-  "dependencies": {
-    "callsites": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.3.3",
