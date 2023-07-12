@@ -57,28 +57,20 @@ function importMetaResolve(specifier, parentURL = undefined) {
   }
   parentURL = `${parentURL}`;
 
-  const cacheKey = specifier + "\0" + parentURL;
-  importMetaResolve.c ??= Object.create(null);
-  if (!(cacheKey in importMetaResolve.c)) {
-    const port = getPort();
-    const lockBuffer = new SharedArrayBuffer(4);
-    const lock = new Int32Array(lockBuffer);
+  const port = getPort();
+  const lockBuffer = new SharedArrayBuffer(4);
+  const lock = new Int32Array(lockBuffer);
 
-    port.postMessage([lockBuffer, specifier, parentURL]);
-    Atomics.wait(lock, 0, 0);
-    // @ts-ignore
-    const r = receiveMessageOnPort(port).message;
+  port.postMessage([lockBuffer, specifier, parentURL]);
+  Atomics.wait(lock, 0, 0);
+  // @ts-ignore
+  const r = receiveMessageOnPort(port).message;
 
-    if (r.length == 1) {
-      importMetaResolve.c[cacheKey] = r[0];
-    } else {
-      throw r[1];
-    }
-    console.debug(importMetaResolve.c);
+  if (r.length == 1) {
+    return r[0];
+  } else {
+    throw r[1];
   }
-  return importMetaResolve.c[cacheKey];
 }
-/** @type {any} */
-importMetaResolve.c;
 
 export default importMetaResolve;
