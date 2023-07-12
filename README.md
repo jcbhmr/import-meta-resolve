@@ -10,10 +10,10 @@
 </div>
 
 ⏱ Completely synchronous, just like in the browser \
-🧙 Automagically deduces the `import.meta.url` \
 🔃 Works with `--loader` stuff too! \
 🌳 Don't need to `--experimental-import-meta-resolve` \
-🦄 Importable as a ponyfill or polyfill
+🦄 Importable as a ponyfill or polyfill \
+🧅 Works in Node.js, Bun, Deno, and the browser too
 
 ## Installation
 
