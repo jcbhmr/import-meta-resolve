@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "noEmit": true,
     "allowJs": true,
     "checkJs": true,
-    "lib": ["ESNext", "DOM"],
+    "noEmit": true,
+    "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "strict": false
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "isolatedModules": true,
+    "strict": false,
+    "skipLibCheck": true
   },
   "include": ["src"]
 }

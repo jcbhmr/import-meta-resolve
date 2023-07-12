@@ -1,8 +1,8 @@
 ![🚧 Under construction 👷‍♂️](https://i.imgur.com/LEP2R3N.png)
 
-# Node.js `import.meta.resolve()` polyfill
+# `import.meta.resolve()` polyfill
 
-🎯 Synchronous `import.meta.resolve()` polyfill for Node.js \
+🎯 Standard synchronous `import.meta.resolve()` for anywhere \
 💡 Inspired by [wooorm/import-meta-resolve]
 
 <div align="center">
@@ -14,7 +14,8 @@ TODO: Add header image here
 ⏱ Completely synchronous, just like in the browser \
 🧙 Automagically deduces the `import.meta.url` \
 🔃 Works with `--loader` stuff too! \
-🌳 Don't need to `--experimental-import-meta-resolve`
+🌳 Don't need to `--experimental-import-meta-resolve` \
+🦄 Importable as a ponyfill or polyfill
 
 ## Installation
 
@@ -37,66 +38,24 @@ a native `import.meta.resolve()`** function! 😊
 
 ![Node.js](https://img.shields.io/static/v1?style=for-the-badge&message=Node.js&color=339933&logo=Node.js&logoColor=FFFFFF&label=)
 
-```js
-import applyResolvePolyfill from "@jcbhmr/node-import-meta-resolve";
-applyResolvePolyfill(import.meta);
+⚠️ The two-argument `import.meta.resolve(specifier, parentURL)` is only
+supported on Node.js and Bun! This behaviour **cannot** be replicated elsewhere
+like in Deno or the browser right now. If you want this, make sure to upvote and
+participate in the discussion over at [whatwg/html#8077] to get some kind of ESM
+resolver that accepts a parent/base URL.
 
-console.log(import.meta.resolve("is-odd"))
+```js
+import polyfill from "@jcbhmr/node-import-meta-resolve/polyfill.js";
+import resolve from "@jcbhmr/node-import-meta-resolve/resolve.js";
+polyfill(import.meta);
+
+console.log(import.meta.resolve("is-odd"));
 //=> file:///node_modules/is-odd/index.js
-console.log(import.meta.resolve("./index.js"))
+console.log(import.meta.resolve("./index.js"));
 //=> file:///index.js
-console.log(import.meta.resolve("./index.js", "./test/hello.js");
-//=> file:///test/index.js
 ```
-
-## How it works
-
-We use Node.js' fancy ability to set `--cli-args` **for worker threads**. That
-means we can use the native implementation of `import.meta.resolve()` (available
-in all Node.js LTS versions) to resolve the arguments on a worker thread. The
-tricky part is getting the result back to the main thread synchronously. 😉
-Here's some pseudocode of what it looks like behind the scenes:
-
-```js
-// worker.js
-onmessage = ([specifier, parentURL]) => {
-  const resolved = import.meta.resolve(specifier, parentURL);
-  postMessage(resolved);
-  Atomics.notify(...);
-};
-```
-
-```js
-// lib.js
-worker.postMessage(["is-odd", "file:///index.js"]);
-Atomics.wait(...);
-return recieveMessageOnPort(worker).message;
-```
-
-## Development
-
-![JavaScript](https://img.shields.io/static/v1?style=for-the-badge&message=JavaScript&color=222222&logo=JavaScript&logoColor=F7DF1E&label=)
-
-This is a really simple package. It's simple enough that we can get away without
-using TypeScript and instead rely on JSDoc comments for type information. To get
-started, run `npm install` and then `npm test` to run the test suite.
-
-```sh
-npm install
-npm test
-```
-
-The most complicated part of this package is managing the worker thread to make
-sure that:
-
-1. It's alive _only when it's needed_. That means we need to kill it if it's not
-   in use for N seconds.
-2. We don't accidentally keep the thread alive via `.ref()` (the default on
-   creation). We need to remember to explicitly `.unref()` everything.
-3. We run the RPC to resolve the arguments _syncronously_. This means we need to
-   do some fancy `SharedArrayBuffer` signalling to make sure that the main
-   thread waits for the worker thread to finish.
 
 [yarn]: https://yarnpkg.com/
 [pnpm]: https://pnpm.io/
 [wooorm/import-meta-resolve]: https://github.com/wooorm/import-meta-resolve
+[whatwg/html#8077]: https://github.com/whatwg/html/issues/8077

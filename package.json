@@ -1,7 +1,7 @@
 {
-  "name": "@jcbhmr/node-import-meta-resolve",
-  "version": "4.0.0",
-  "description": "🎯 Synchronous import.meta.resolve() polyfill for Node.js",
+  "name": "@webfill/import-meta-resolve",
+  "version": "5.0.0",
+  "description": "🎯 Standard synchronous `import.meta.resolve()` for anywhere",
   "keywords": [
     "import",
     "import-meta",
@@ -20,17 +20,28 @@
   ],
   "type": "module",
   "exports": {
-    "deno": null,
-    "bun": null,
-    "node": "./src/index.js"
+    ".": {
+      "deno": "./src/resolve-deno+default.js",
+      "bun": "./src/resolve-bun.js",
+      "node": "./src/resolve-node.js",
+      "default": "./src/resolve-deno+default.js"
+    },
+    "./resolve.js": {
+      "deno": "./src/resolve-deno+default.js",
+      "bun": "./src/resolve-bun.js",
+      "node": "./src/resolve-node.js",
+      "default": "./src/resolve-deno+default.js"
+    },
+    "./lib/*": null,
+    "./*.js": "./src/*.js"
   },
   "files": [
     "src"
   ],
   "scripts": {
-    "bench": "node --experimental-import-meta-resolve test/index.bench.js",
+    "bench": "node --experimental-import-meta-resolve benchmark/native-vs-polyfill.bench.js",
     "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
-    "test": "node --test test/index.test.js test/resolve.test.js"
+    "test": "node --test"
   },
   "dependencies": {
     "callsites": "^4.0.0"
