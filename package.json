@@ -1,6 +1,6 @@
 {
   "name": "@webfill/import-meta-resolve",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "🎯 Standard synchronous import.meta.resolve() for anywhere",
   "keywords": [
     "import",
@@ -20,18 +20,21 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./src/resolve-types.d.ts",
       "deno": "./src/resolve-deno+default.js",
       "bun": "./src/resolve-bun.js",
       "node": "./src/resolve-node.js",
       "default": "./src/resolve-deno+default.js"
     },
     "./resolve.js": {
+      "types": "./src/resolve-types.d.ts",
       "deno": "./src/resolve-deno+default.js",
       "bun": "./src/resolve-bun.js",
       "node": "./src/resolve-node.js",
       "default": "./src/resolve-deno+default.js"
     },
     "./polyfill.js": {
+      "types": "./src/polyfill-types.d.ts",
       "deno": "./src/polyfill-deno.js",
       "bun": "./src/polyfill-bun.js",
       "node": "./src/polyfill-node.js",
