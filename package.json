@@ -1,6 +1,6 @@
 {
   "name": "@webfill/import-meta-resolve",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "🎯 Standard synchronous import.meta.resolve() for anywhere",
   "keywords": [
     "import",
