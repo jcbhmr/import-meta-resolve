@@ -20,16 +20,12 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test-nodejs:
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: ["16", "18", "20"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: "20"
           cache: npm
       - run: npm ci
-      - run: npm test
+      - run: npm run bench

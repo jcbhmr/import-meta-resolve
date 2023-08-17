@@ -1,5 +1,5 @@
 import { Bench } from "tinybench";
-import importMetaResolve from "../src/lib/importMetaResolve-node.js";
+import importMetaResolve from "../src/lib/importMetaResolve.js";
 
 console.debug("process.version", process.version);
 const majorVersion = +process.version.match(/^v(\d+)/)[1];

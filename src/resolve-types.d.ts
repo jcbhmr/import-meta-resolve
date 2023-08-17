@@ -4,15 +4,7 @@
  * @see https://bun.sh/docs/api/import-meta
  * @see https://deno.land/manual/runtime/import_meta_api
  */
-function resolve(importMeta: ImportMeta, specifier: string): string;
-/**
- * @see https://nodejs.org/api/esm.html#importmetaresolvespecifier-parent
- * @experimental
- */
-function resolve(
+export default function resolve(
   importMeta: ImportMeta,
   specifier: string,
-  parentURL?: string
 ): string;
-
-export default resolve;

@@ -14,7 +14,7 @@ declare global {
     resolve?(
       importMeta: ImportMeta,
       specifier: string,
-      parentURL?: string
+      parentURL?: string,
     ): string;
   }
 }

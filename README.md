@@ -37,8 +37,9 @@ import {} from "npm:@webfill/import-meta-resolve";
 import {} from "https://esm.sh/@webfill/import-meta-resolve";
 ```
 
-If you want to use this package in the browser (it's a no-op there, but you do
-you!) you can import it directly from an npm CDN like [esm.sh] or [jsDelivr].
+If you want to use this package in the browser (🎗️ [`import.meta.resolve()` is
+well supported in browsers]) you can import it directly from an npm CDN like
+[esm.sh] or [jsDelivr].
 
 ```js
 import {} from "https://esm.sh/@webfill/import-meta-resolve";
@@ -55,24 +56,18 @@ import {} from "https://esm.run/@webfill/import-meta-resolve";
 This package exists primarily to smooth over the different names, signatures,
 and return values among Bun, Deno, Node.js, and the browser.
 
-⚠️ The two-argument `import.meta.resolve(specifier, parentURL)` is only
-supported on Node.js and Bun! This behaviour **cannot** be replicated (easily)
-elsewhere like in Deno or the browser right now. If you want a standard, make
-sure to upvote and participate in the discussion over at [whatwg/html#8077] to
-get some kind of ESM resolver that accepts a parent/base URL.
-
 ```js
 import resolve from "@webfill/import-meta-resolve";
 
 console.log(resolve(import.meta, "is-odd"));
 //=> file:///awesome-project/node_modules/is-odd/index.js
+// OR using import maps in a browser:
+//=> https://esm.run/is-odd
 
 console.log(resolve(import.meta, "./lib.js"));
 //=> file:///awesome-project/lib.js
-
-// Node.js and Bun specific!
-console.log(resolve(import.meta, "is-odd", "file:///awesome-project/lib.js"));
-//=> file:///awesome-project/node_modules/is-odd/index.js
+// OR when in a browser:
+//=> https://localhost:8080/lib.js
 ```
 
 ```js
@@ -81,18 +76,37 @@ polyfill(import.meta);
 
 console.log(import.meta.resolve("is-odd"));
 //=> file:///awesome-project/node_modules/is-odd/index.js
+// OR using import maps in a browser:
+//=> https://esm.run/is-odd
 
 console.log(import.meta.resolve("./lib.js"));
 //=> file:///awesome-project/lib.js
-
-// Node.js and Bun specific!
-console.log(import.meta.resolve("is-odd", "file:///awesome-project/lib.js"));
-//=> file:///awesome-project/node_modules/is-odd/index.js
+// OR when in a browser:
+//=> https://localhost:8080/lib.js
 ```
 
+⚠️ The two-argument `import.meta.resolve(specifier, parentURL)` is only
+supported on Node.js and Bun! This behaviour **cannot** be replicated (easily)
+elsewhere like in Deno or the browser right now. Check out [whatwg/html#8077] if
+you're interested in the standardization discussion.
+
+```js
+import polyfill from "@webfill/import-meta-resolve/polyfill.js";
+polyfill(import.meta);
+
+console.log(import.meta.resolve("is-odd"));
+//=> file:///awesome-project/node_modules/is-odd/index.js
+
+console.log(import.meta.resolve("is-odd", "file:///different-project/app.js"));
+//=> file:///different-project/node_modules/is-odd/index.js
+```
+
+<!-- prettier-ignore-start -->
 [yarn]: https://yarnpkg.com/
 [pnpm]: https://pnpm.io/
 [wooorm/import-meta-resolve]: https://github.com/wooorm/import-meta-resolve
 [whatwg/html#8077]: https://github.com/whatwg/html/issues/8077
 [esm.sh]: https://esm.sh/
 [jsdelivr]: https://www.jsdelivr.com/esm
+[`import.meta.resolve()` is well supported in browsers]: https://caniuse.com/mdn-javascript_operators_import_meta_resolve
+<!-- prettier-ignore-end -->

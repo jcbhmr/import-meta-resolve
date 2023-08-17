@@ -48,15 +48,16 @@
   ],
   "scripts": {
     "bench": "node --experimental-import-meta-resolve benchmark/native-vs-polyfill.bench.js",
-    "lint": "prettier --ignore-path .gitignore -w . && tsc --noEmit",
+    "lint": "prettier -w . && tsc --noEmit",
     "test": "node --test"
   },
   "devDependencies": {
     "@types/node": "^20.3.3",
-    "execa": "^7.1.1",
     "is-odd": "^3.0.1",
-    "prettier": "^3.0.0",
+    "prettier": "^3.0.2",
+    "tempy": "^3.1.0",
     "tinybench": "^2.5.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "zx": "^7.2.3"
   }
 }

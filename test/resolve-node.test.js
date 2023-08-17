@@ -1,17 +1,8 @@
 import test from "node:test";
 import assert from "node:assert";
-import os from "node:os";
-import fs from "node:fs";
-import fsPromises from "node:fs/promises";
-import { $ } from "execa";
+import { temporaryWrite } from "tempy";
+import { $ } from "zx";
 import resolve from "../src/resolve-node.js";
-
-async function tmpjs(js) {
-  const f = os.tmpdir() + "/" + Math.random().toString(36) + ".mjs";
-  await fsPromises.writeFile(f, js);
-  process.on("exit", () => fs.unlinkSync(f));
-  return f;
-}
 
 test("resolve works with relative paths", () => {
   console.log(resolve(import.meta, "../src/resolve-node.js"));
@@ -45,19 +36,26 @@ test("works with no parentURL", () => {
   console.log(resolve(import.meta, "../src/resolve-node.js"));
 });
 
-test("works with loaders", async () => {
-  const f1 = await tmpjs(`
-    export function resolve(specifier, ctx, next) {
+// Node.js v16 and v18 don't appear to pass along --loader flags.
+if (process.version.startsWith("v20")) {
+  test("works with loaders", async () => {
+    const f1 = await temporaryWrite(
+      `export function resolve(specifier, ctx, next) {
       if (specifier.startsWith("custom:")) {
         return { url: "hello:world", shortCircuit: true };
       }
       return next(specifier, ctx);
-    }
-  `);
-  const u = new URL("../src/resolve-node.js", import.meta.url).href;
-  const f2 = await tmpjs(`
-    import resolve from ${JSON.stringify(u)};
-    console.log(resolve(import.meta, "custom:foo", import.meta.url));
-  `);
-  console.log((await $`node --loader=${f1} ${f2}`).stdout);
-});
+    }`,
+      { extension: ".mjs" },
+    );
+
+    const u = new URL("../src/resolve-node.js", import.meta.url).href;
+    const f2 = await temporaryWrite(
+      `import resolve from ${JSON.stringify(u)};
+    console.log(resolve(import.meta, "custom:foo", import.meta.url));`,
+      { extension: ".mjs" },
+    );
+
+    console.log((await $`node --loader=${f1} ${f2}`).stdout);
+  });
+}

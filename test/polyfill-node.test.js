@@ -1,20 +1,11 @@
 import test from "node:test";
 import assert from "node:assert";
-import { tmpdir } from "node:os";
-import { unlinkSync } from "node:fs";
-import { writeFile } from "node:fs/promises";
-import { $ } from "execa";
+import { temporaryWrite } from "tempy";
+import { $ } from "zx";
 import polyfill from "../src/polyfill-node.js";
 
 console.debug("process.version", process.version);
 polyfill(import.meta);
-
-async function tmpjs(js) {
-  const f = tmpdir() + "/" + Math.random().toString(36) + ".mjs";
-  await writeFile(f, js);
-  process.on("exit", () => unlinkSync(f));
-  return f;
-}
 
 test("resolve works with relative paths", () => {
   console.log(import.meta.resolve("../src/resolve-node.js"));
@@ -49,20 +40,27 @@ test("works with no parentURL", () => {
   console.log(importMeta.resolve("../src/resolve-node.js"));
 });
 
-test("works with loaders", async () => {
-  const f1 = await tmpjs(`
-    export function resolve(specifier, ctx, next) {
-      if (specifier.startsWith("custom:")) {
-        return { url: "hello:world", shortCircuit: true };
-      }
-      return next(specifier, ctx);
-    }
-  `);
-  const u = new URL("../src/polyfill-node.js", import.meta.url).href;
-  const f2 = await tmpjs(`
-    import polyfill from ${JSON.stringify(u)};
-    polyfill(import.meta);
-    console.log(import.meta.resolve("custom:foo"));
-  `);
-  console.log((await $`node --loader=${f1} ${f2}`).stdout);
-});
+// Node.js v16 and v18 don't appear to pass along --loader flags.
+if (process.version.startsWith("v20")) {
+  test("works with loaders", async () => {
+    const f1 = await temporaryWrite(
+      `export function resolve(specifier, ctx, next) {
+        if (specifier.startsWith("custom:")) {
+          return { url: "hello:world", shortCircuit: true };
+        }
+        return next(specifier, ctx);
+      }`,
+      { extension: ".mjs" },
+    );
+
+    const u = new URL("../src/polyfill-node.js", import.meta.url).href;
+    const f2 = await temporaryWrite(
+      `import polyfill from ${JSON.stringify(u)};
+      polyfill(import.meta);
+      console.log(import.meta.resolve("custom:foo"));`,
+      { extension: ".mjs" },
+    );
+
+    console.log((await $`node --loader=${f1} ${f2}`).stdout);
+  });
+}
